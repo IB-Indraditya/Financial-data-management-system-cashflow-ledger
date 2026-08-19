@@ -1,6 +1,5 @@
 # Financial-data-management-system-cashflow-ledger
 
-# Client Portfolio and Mark-to-Market (MTM) Tracker
 
 A relational database system designed to map client registration data to high-frequency transactional data. This project resolves cross-table collation mismatches, implements index optimization for non-unique entity joins, and provides aggregated financial performance insights.
 
