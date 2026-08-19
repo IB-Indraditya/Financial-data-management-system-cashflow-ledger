@@ -16,6 +16,9 @@ The primary technical challenges addressed in this implementation include:
 
 ## 🗄️ Database Architecture
 
+###  Techstack
+MySQL Shell Community Edition (To Conduct DDL,DML,DQL,TCL Operations), Notepad++ (For Importing SQL), MySQL Workbench (For Exporting SQL)
+
 ### 1. `clients` Table
 Stores primary access records, login identification strings, and internal business tracking IDs.
 *   `client_id`: `INT AUTO_INCREMENT PRIMARY KEY` — Internal surrogate key.
