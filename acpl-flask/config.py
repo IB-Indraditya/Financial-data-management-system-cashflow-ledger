@@ -12,7 +12,7 @@ class Config:
     # MySQL database
     SQLALCHEMY_DATABASE_URI = os.environ.get(
         "DATABASE_URL",
-        "mysql+pymysql://root:Root64$my2sql@localhost:3360/findb"
+        "mysql+pymysql://u478678954_apricus:wDUH*6G3zfn*ARY@srv2146.hstgr.io/u478678954_findb"
     )
 
     SQLALCHEMY_TRACK_MODIFICATIONS = False
