@@ -3,10 +3,6 @@ Website: https://financial-data-management-system.onrender.com
 Power BI Snapshot-
 <br>
 <img width="1335" height="739" alt="image" src="https://github.com/user-attachments/assets/8b8ea713-ffe9-4dee-adf1-3b530364e4bd" />
-Business Dashboard
-<br>
-<img width="1347" height="757" alt="image" src="https://github.com/user-attachments/assets/59f44073-2c28-4636-b529-524b816d851f" />
-
 
 
 A relational database system designed to map client registration data to high-frequency transactional data. This project resolves cross-table collation mismatches, implements index optimization for non-unique entity joins, and provides aggregated financial performance insights.
@@ -107,6 +103,12 @@ COLLATE utf8mb4_unicode_ci;
 ```
 
 ---
+
+Business Dashboard
+<br>
+<img width="1347" height="757" alt="image" src="https://github.com/user-attachments/assets/59f44073-2c28-4636-b529-524b816d851f" />
+
+
 
 ## 📝 License
 This project is open-source and available under the [MIT License](https://opensource.org/licenses/MIT).
