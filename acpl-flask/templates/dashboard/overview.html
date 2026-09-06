@@ -1,0 +1,121 @@
+{% extends "dashboard/layout.html" %}
+{% block page_title %}Business Overview{% endblock %}
+{% block dashboard_content %}
+
+<div class="row g-3 mb-4">
+  <div class="col-sm-6 col-xl-3">
+    <div class="acpl-stat-card h-100">
+      <div class="label mb-2">Total AUM</div>
+      <div class="value">₹{{ '{:,.0f}'.format(kpis.total_aum) }}</div>
+    </div>
+  </div>
+  <div class="col-sm-6 col-xl-3">
+    <div class="acpl-stat-card h-100">
+      <div class="label mb-2">Total Free Cash</div>
+      <div class="value">₹{{ '{:,.0f}'.format(kpis.total_cash) }}</div>
+    </div>
+  </div>
+  <div class="col-sm-6 col-xl-3">
+    <div class="acpl-stat-card h-100">
+      <div class="label mb-2">Cumulative MTM</div>
+      <div class="value">₹{{ '{:,.0f}'.format(kpis.total_cumulative_mtm) }}</div>
+    </div>
+  </div>
+  <div class="col-sm-6 col-xl-3">
+    <div class="acpl-stat-card h-100">
+      <div class="label mb-2">Active Clients</div>
+      <div class="value">{{ kpis.client_count }}</div>
+    </div>
+  </div>
+</div>
+
+<div class="row g-3 mb-4">
+  <div class="col-lg-7">
+    <div class="acpl-card p-3 h-100">
+      <h6 class="font-serif mb-3">Cumulative MTM — all clients</h6>
+      <div style="height:280px"><canvas id="mtmChart"></canvas></div>
+    </div>
+  </div>
+  <div class="col-lg-5">
+    <div class="acpl-card p-3 h-100">
+      <h6 class="font-serif mb-3">Funds added vs. withdrawn</h6>
+      <div style="height:280px"><canvas id="cashChart"></canvas></div>
+    </div>
+  </div>
+</div>
+
+<div class="acpl-card p-3">
+  <h6 class="font-serif mb-3">Client leaderboard (by cumulative MTM)</h6>
+  <div class="table-responsive">
+    <table class="table table-acpl align-middle mb-0">
+      <thead>
+        <tr>
+          <th>Client</th><th>Login ID</th>
+          <th class="text-end">Investment amt.</th>
+          <th class="text-end">Free cash</th>
+          <th class="text-end">Cumulative MTM</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for r in leaderboard %}
+        <tr>
+          <td>{{ r.name }}</td>
+          <td><span class="badge-gold badge">{{ r.client_code }}</span></td>
+          <td class="text-end">₹{{ '{:,.0f}'.format(r.investmt_amt or 0) }}</td>
+          <td class="text-end">₹{{ '{:,.0f}'.format(r.current_cash or 0) }}</td>
+          <td class="text-end fw-semibold {{ 'text-success' if (r.cumulative_mtm or 0) >= 0 else 'text-danger' }}">
+            ₹{{ '{:,.0f}'.format(r.cumulative_mtm or 0) }}
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+  const GOLD = '#c9a15a', GREEN = '#14493a', DANGER = 'rgba(179,73,60,0.8)', GRID = 'rgba(14,59,46,0.08)', INK = '#16281f';
+
+  new Chart(document.getElementById('mtmChart'), {
+    type: 'line',
+    data: {
+      labels: {{ mtm_series.labels | tojson }},
+      datasets: [{
+        label: 'Cumulative MTM',
+        data: {{ mtm_series.totals | tojson }},
+        borderColor: GREEN, backgroundColor: 'rgba(201,161,90,0.15)',
+        fill: true, tension: 0.35, pointRadius: 0, borderWidth: 2,
+      }],
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { display: false } },
+      scales: {
+        x: { grid: { color: GRID }, ticks: { color: INK, maxTicksLimit: 8, font: { size: 10 } } },
+        y: { grid: { color: GRID }, ticks: { color: INK, font: { size: 10 } } },
+      },
+    },
+  });
+
+  new Chart(document.getElementById('cashChart'), {
+    type: 'bar',
+    data: {
+      labels: {{ cash_series.labels | tojson }},
+      datasets: [
+        { label: 'Funds added', data: {{ cash_series.added | tojson }}, backgroundColor: GOLD },
+        { label: 'Funds withdrawn', data: {{ cash_series.withdrawn | tojson }}, backgroundColor: DANGER },
+      ],
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { position: 'top', labels: { color: INK, font: { size: 11 } } } },
+      scales: {
+        x: { grid: { display: false }, ticks: { color: INK, maxTicksLimit: 8, font: { size: 10 } } },
+        y: { grid: { color: GRID }, ticks: { color: INK, font: { size: 10 } } },
+      },
+    },
+  });
+</script>
+{% endblock %}

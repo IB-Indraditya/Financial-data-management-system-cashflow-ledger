@@ -1,0 +1,98 @@
+{% extends "dashboard/layout.html" %}
+{% block page_title %}{{ client.name }}{% endblock %}
+{% block dashboard_content %}
+
+{% set latest = apricus_rows[-1] if apricus_rows else None %}
+
+<div class="row g-3 mb-4">
+  <div class="col-lg-4">
+    <div class="acpl-card p-4 h-100">
+      <div class="d-flex justify-content-between align-items-start mb-3">
+        <h6 class="font-serif mb-0">Client details</h6>
+        <button class="btn btn-sm btn-outline-gold" type="button" data-bs-toggle="collapse" data-bs-target="#editForm">
+          <i class="bi bi-pencil me-1"></i>Edit
+        </button>
+      </div>
+
+      <div class="collapse" id="editForm">
+        <form method="POST" action="{{ url_for('dashboard.client_edit', client_id=client.client_id) }}" class="mb-3">
+          <div class="mb-2">
+            <label class="form-label">Name</label>
+            <input class="form-control" name="name" value="{{ client.name }}">
+          </div>
+          <div class="mb-2">
+            <label class="form-label">Email</label>
+            <input class="form-control" name="mail_id" value="{{ client.mail_id }}">
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Login ID</label>
+            <input class="form-control" name="login_id" value="{{ client.login_id }}">
+          </div>
+          <button class="btn btn-gold btn-sm" type="submit">Save changes</button>
+        </form>
+      </div>
+
+      <ul class="list-unstyled mb-0 small">
+        <li class="mb-2"><span class="text-secondary">Login ID:</span> <span class="badge-gold badge">{{ client.login_id }}</span></li>
+        <li class="mb-2"><span class="text-secondary">Email:</span> {{ client.mail_id }}</li>
+        <li class="mb-2"><span class="text-secondary">Current investment:</span> {{ '₹{:,.0f}'.format(latest.investmt_amt) if latest and latest.investmt_amt is not none else '—' }}</li>
+        <li class="mb-2"><span class="text-secondary">Free cash balance:</span> {{ '₹{:,.0f}'.format(latest.current_cash) if latest and latest.current_cash is not none else '—' }}</li>
+        <li><span class="text-secondary">Cumulative MTM:</span> {{ '₹{:,.0f}'.format(latest.cumulative_mtm) if latest and latest.cumulative_mtm is not none else '—' }}</li>
+      </ul>
+    </div>
+  </div>
+  <div class="col-lg-8">
+    <div class="acpl-card p-3 h-100">
+      <h6 class="font-serif mb-3">Cumulative MTM over time</h6>
+      <div style="height:260px"><canvas id="clientMtmChart"></canvas></div>
+    </div>
+  </div>
+</div>
+
+<div class="acpl-card p-3">
+  <h6 class="font-serif mb-3">Ledger history</h6>
+  <div class="table-responsive" style="max-height:420px">
+    <table class="table table-acpl align-middle mb-0">
+      <thead>
+        <tr><th>Date</th><th class="text-end">Investment</th><th class="text-end">MTM</th><th class="text-end">Free cash</th><th class="text-end">Cumulative MTM</th></tr>
+      </thead>
+      <tbody>
+        {% for a in apricus_rows | reverse %}
+        <tr>
+          <td>{{ a.date.isoformat() }}</td>
+          <td class="text-end">{{ '₹{:,.0f}'.format(a.investmt_amt) if a.investmt_amt is not none else '—' }}</td>
+          <td class="text-end {{ 'text-success' if (a.mtm or 0) >= 0 else 'text-danger' }}">{{ '₹{:,.0f}'.format(a.mtm) if a.mtm is not none else '—' }}</td>
+          <td class="text-end">{{ '₹{:,.0f}'.format(a.current_cash) if a.current_cash is not none else '—' }}</td>
+          <td class="text-end">{{ '₹{:,.0f}'.format(a.cumulative_mtm) if a.cumulative_mtm is not none else '—' }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+  new Chart(document.getElementById('clientMtmChart'), {
+    type: 'line',
+    data: {
+      labels: {{ apricus_rows | map(attribute='date') | map('string') | list | tojson }},
+      datasets: [{
+        label: 'Cumulative MTM',
+        data: {{ apricus_rows | map(attribute='cumulative_mtm') | list | tojson }},
+        borderColor: '#14493a', backgroundColor: 'rgba(201,161,90,0.15)',
+        fill: true, tension: 0.35, pointRadius: 0, borderWidth: 2,
+      }],
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { display: false } },
+      scales: {
+        x: { grid: { color: 'rgba(14,59,46,0.08)' }, ticks: { color: '#16281f', maxTicksLimit: 8, font: { size: 10 } } },
+        y: { grid: { color: 'rgba(14,59,46,0.08)' }, ticks: { color: '#16281f', font: { size: 10 } } },
+      },
+    },
+  });
+</script>
+{% endblock %}

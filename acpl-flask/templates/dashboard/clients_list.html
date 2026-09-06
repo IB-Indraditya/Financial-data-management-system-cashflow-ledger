@@ -1,0 +1,46 @@
+{% extends "dashboard/layout.html" %}
+{% block page_title %}Clients{% endblock %}
+{% block dashboard_content %}
+
+<div class="d-flex flex-wrap gap-3 align-items-center justify-content-between mb-3">
+  <form method="GET" class="d-flex" style="max-width:320px; width:100%">
+    <input type="text" name="q" class="form-control" placeholder="Search by name, login ID or email…" value="{{ q }}">
+  </form>
+  <a href="{{ url_for('dashboard.client_new') }}" class="btn btn-gold">
+    <i class="bi bi-plus-lg me-1"></i>Add client
+  </a>
+</div>
+
+<div class="acpl-card p-3">
+  <div class="table-responsive">
+    <table class="table table-acpl align-middle mb-0">
+      <thead>
+        <tr><th>ID</th><th>Name</th><th>Login ID</th><th>Email</th><th class="text-end">Actions</th></tr>
+      </thead>
+      <tbody>
+        {% for c in clients %}
+        <tr>
+          <td>{{ c.client_id }}</td>
+          <td><a href="{{ url_for('dashboard.client_detail', client_id=c.client_id) }}">{{ c.name }}</a></td>
+          <td><span class="badge-gold badge">{{ c.login_id }}</span></td>
+          <td class="text-secondary">{{ c.mail_id }}</td>
+          <td class="text-end">
+            <div class="d-flex gap-2 justify-content-end">
+              <a href="{{ url_for('dashboard.client_detail', client_id=c.client_id) }}" class="btn btn-sm btn-outline-gold">
+                <i class="bi bi-eye me-1"></i>View
+              </a>
+              <form method="POST" action="{{ url_for('dashboard.client_delete', client_id=c.client_id) }}"
+                    onsubmit="return confirm('Are you sure? This cannot be undone.');">
+                <button class="btn btn-sm btn-outline-danger" type="submit"><i class="bi bi-trash3 me-1"></i>Delete</button>
+              </form>
+            </div>
+          </td>
+        </tr>
+        {% else %}
+        <tr><td colspan="5" class="text-center text-secondary py-4">No clients found.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

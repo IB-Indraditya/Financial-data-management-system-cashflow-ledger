@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="d-flex">
+  <aside class="acpl-sidebar d-none d-lg-block" style="width:240px">
+    <div class="p-3 border-bottom" style="border-color:var(--acpl-border)">
+      <a href="{{ url_for('main.landing') }}" class="d-flex align-items-center gap-2 text-decoration-none">
+        <i class="bi bi-graph-up-arrow" style="color:#c9a15a"></i>
+        <span class="font-serif fs-5" style="color:var(--acpl-green-900)">ACPL</span>
+      </a>
+    </div>
+    <nav class="nav flex-column py-2">
+      {% set nav_items = [
+        ('dashboard.overview', 'Overview', 'bi-speedometer2'),
+        ('dashboard.clients_list', 'Clients', 'bi-people'),
+        ('dashboard.trades_list', 'Trade Data', 'bi-graph-up'),
+        ('dashboard.cash_list', 'Cash Ledger', 'bi-cash-coin'),
+        ('dashboard.assistant', 'AI Assistant', 'bi-stars'),
+      ] %}
+      {% for endpoint, label, icon in nav_items %}
+        <a href="{{ url_for(endpoint) }}"
+           class="nav-link d-flex align-items-center gap-2 {{ 'active' if request.endpoint == endpoint else '' }}">
+          <i class="bi {{ icon }}"></i><span>{{ label }}</span>
+        </a>
+      {% endfor %}
+    </nav>
+  </aside>
+
+  <div class="offcanvas offcanvas-start acpl-sidebar" tabindex="-1" id="mobileSidebar">
+    <div class="offcanvas-header">
+      <span class="font-serif fs-5" style="color:var(--acpl-green-900)">ACPL</span>
+      <button type="button" class="btn-close" data-bs-dismiss="offcanvas"></button>
+    </div>
+    <div class="offcanvas-body p-0">
+      <nav class="nav flex-column py-2">
+        {% for endpoint, label, icon in nav_items %}
+          <a href="{{ url_for(endpoint) }}" class="nav-link d-flex align-items-center gap-2" data-bs-dismiss="offcanvas">
+            <i class="bi {{ icon }}"></i><span>{{ label }}</span>
+          </a>
+        {% endfor %}
+      </nav>
+    </div>
+  </div>
+
+  <div class="flex-grow-1 min-vh-100" style="min-width:0">
+    <div class="acpl-navbar d-flex align-items-center justify-content-between px-4 py-3">
+      <div class="d-flex align-items-center gap-3">
+        <button class="btn btn-sm btn-outline-gold d-lg-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#mobileSidebar">
+          <i class="bi bi-list"></i>
+        </button>
+        <h1 class="h5 mb-0 font-serif">{% block page_title %}Dashboard{% endblock %}</h1>
+      </div>
+      <div class="d-flex align-items-center gap-3">
+        <span class="text-secondary small d-none d-sm-inline">{{ current_user.email }}</span>
+        <a class="btn btn-sm btn-outline-gold" href="{{ url_for('auth.logout') }}">
+          <i class="bi bi-box-arrow-right me-1"></i>Logout
+        </a>
+      </div>
+    </div>
+
+    <div class="p-4">
+      {% block dashboard_content %}{% endblock %}
+    </div>
+  </div>
+</div>
+{% endblock %}

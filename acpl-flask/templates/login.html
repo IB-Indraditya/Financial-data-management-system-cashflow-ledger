@@ -1,0 +1,101 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="min-vh-100 d-flex align-items-center justify-content-center hero-gradient px-3">
+
+    <div
+        class="acpl-card p-4 p-md-5"
+        style="max-width: 420px; width: 100%;"
+    >
+
+        <div class="text-center mb-4">
+
+            <div
+                class="d-inline-flex align-items-center justify-content-center rounded-circle mb-3"
+                style="
+                    width: 56px;
+                    height: 56px;
+                    background: var(--acpl-cream);
+                    border: 1px solid var(--acpl-gold);
+                "
+            >
+                <i
+                    class="bi bi-graph-up-arrow"
+                    style="color: #a8823f; font-size: 1.4rem;"
+                ></i>
+            </div>
+
+            <h1 class="font-serif h3 mb-1">
+                ACPL Admin
+            </h1>
+
+            <p class="text-secondary small mb-0">
+                Sign in to the financial management dashboard
+            </p>
+
+        </div>
+
+
+        <form
+            method="POST"
+            action="{{ url_for('auth.login', next=request.args.get('next')) }}"
+        >
+
+            <div class="mb-3">
+
+                <label class="form-label">
+                    Email
+                </label>
+
+                <input
+                    type="email"
+                    name="email"
+                    class="form-control"
+                    value="{{ request.form.get('email', 'acpl002@gmail.com') }}"
+                    required
+                >
+
+            </div>
+
+
+            <div class="mb-4">
+
+                <label class="form-label">
+                    Password
+                </label>
+
+                <input
+                    type="password"
+                    name="password"
+                    class="form-control"
+                    placeholder="Enter your password"
+                    required
+                >
+
+            </div>
+
+
+            <button
+                type="submit"
+                class="btn btn-gold w-100"
+            >
+                Sign in
+            </button>
+
+        </form>
+
+
+        <p class="text-center small text-secondary mt-4 mb-0">
+
+            <a href="{{ url_for('main.landing') }}">
+                &larr; Back to homepage
+            </a>
+
+        </p>
+
+    </div>
+
+</div>
+
+{% endblock %}

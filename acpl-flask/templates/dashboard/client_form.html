@@ -1,0 +1,24 @@
+{% extends "dashboard/layout.html" %}
+{% block page_title %}Add Client{% endblock %}
+{% block dashboard_content %}
+<div class="acpl-card p-4" style="max-width:520px">
+  <form method="POST">
+    <div class="mb-3">
+      <label class="form-label">Full name</label>
+      <input class="form-control" name="name" required>
+    </div>
+    <div class="mb-3">
+      <label class="form-label">Email</label>
+      <input type="email" class="form-control" name="mail_id" required>
+    </div>
+    <div class="mb-4">
+      <label class="form-label">Login ID</label>
+      <input class="form-control" name="login_id" placeholder="e.g. acpl011" required>
+    </div>
+    <div class="d-flex gap-2">
+      <button type="submit" class="btn btn-gold">Create client</button>
+      <a href="{{ url_for('dashboard.clients_list') }}" class="btn btn-outline-gold">Cancel</a>
+    </div>
+  </form>
+</div>
+{% endblock %}

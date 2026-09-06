@@ -1,0 +1,72 @@
+[
+  {
+    "client_id": 1,
+    "name": "Rohit Sharma",
+    "mail_id": "acpl001@gmail.com",
+    "login_id": "acpl001",
+    "password": "Admin@123"
+  },
+  {
+    "client_id": 2,
+    "name": "Rupam Roy",
+    "mail_id": "acpl002@gmail.com",
+    "login_id": "acpl002",
+    "password": "Admin@123"
+  },
+  {
+    "client_id": 3,
+    "name": "Danish Nawab",
+    "mail_id": "acpl003@gmail.com",
+    "login_id": "acpl003",
+    "password": "Admin@123"
+  },
+  {
+    "client_id": 4,
+    "name": "Shova Seth",
+    "mail_id": "acpl004@gmail.com",
+    "login_id": "acpl004",
+    "password": "Admin@123"
+  },
+  {
+    "client_id": 5,
+    "name": "Kiara Advani",
+    "mail_id": "acpl005@gmail.com",
+    "login_id": "acpl005",
+    "password": "Admin@123"
+  },
+  {
+    "client_id": 6,
+    "name": "Karan Singh",
+    "mail_id": "acpl006@gmail.com",
+    "login_id": "acpl006",
+    "password": "Admin@123"
+  },
+  {
+    "client_id": 7,
+    "name": "Ritam Saha",
+    "mail_id": "acpl007@gmail.com",
+    "login_id": "acpl007",
+    "password": "Admin@123"
+  },
+  {
+    "client_id": 8,
+    "name": "Elina Dcruz",
+    "mail_id": "acpl008@gmail.com",
+    "login_id": "acpl008",
+    "password": "Admin@123"
+  },
+  {
+    "client_id": 9,
+    "name": "Sania Mumtaz",
+    "mail_id": "acpl009@gmail.com",
+    "login_id": "acpl009",
+    "password": "Admin@123"
+  },
+  {
+    "client_id": 10,
+    "name": "Prasam Kundu",
+    "mail_id": "acpl010@gmail.com",
+    "login_id": "acpl010",
+    "password": "Admin@123"
+  }
+]

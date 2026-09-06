@@ -1,0 +1,151 @@
+{% extends "base.html" %}
+{% block content %}
+<main>
+  <nav class="navbar navbar-expand-lg acpl-navbar sticky-top py-3">
+    <div class="container">
+      <a href="{{ url_for('main.landing') }}" class="navbar-brand d-flex align-items-center gap-2">
+        <i class="bi bi-graph-up-arrow" style="color:#c9a15a"></i>
+        <span class="font-serif fs-5">ACPL</span>
+      </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#nav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="nav">
+        <ul class="navbar-nav ms-auto align-items-lg-center gap-lg-4">
+          <li class="nav-item"><a class="nav-link" href="#features">Platform</a></li>
+          <li class="nav-item"><a class="nav-link" href="#ledger">Cashflow Ledger</a></li>
+          <li class="nav-item"><a class="nav-link" href="#assistant">AI Assistant</a></li>
+          <li class="nav-item mt-2 mt-lg-0">
+            <a href="{{ url_for('auth.login') }}" class="btn btn-gold btn-sm px-3">Admin Login</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <section class="hero-gradient ledger-rules py-5">
+    <div class="container py-5">
+      <div class="row align-items-center g-5">
+        <div class="col-lg-7">
+          <p class="section-eyebrow mb-3">Portfolio &amp; cashflow management</p>
+          <h1 class="font-serif display-4 mb-4" style="line-height:1.15">
+            One ledger for every client, every trade, every rupee.
+          </h1>
+          <p class="fs-5 text-secondary mb-4" style="max-width:560px">
+            ACPL brings trade data, cash movements and mark-to-market performance
+            together in a single reconciled ledger, so your team always knows
+            where every account stands.
+          </p>
+          <div class="d-flex flex-wrap gap-3">
+            <a href="{{ url_for('auth.login') }}" class="btn btn-gold btn-lg px-4">Go to admin dashboard</a>
+            <a href="#features" class="btn btn-outline-gold btn-lg px-4">See what's inside</a>
+          </div>
+          <hr class="divider-gold mt-5 mb-4">
+          <div class="row text-secondary small g-3">
+            <div class="col-4"><strong class="d-block fs-5 font-serif" style="color:var(--acpl-green-900)">10</strong>Active clients</div>
+            <div class="col-4"><strong class="d-block fs-5 font-serif" style="color:var(--acpl-green-900)">1,000+</strong>Ledger entries</div>
+            <div class="col-4"><strong class="d-block fs-5 font-serif" style="color:var(--acpl-green-900)">Daily</strong>MTM reconciliation</div>
+          </div>
+        </div>
+
+        <div class="col-lg-5">
+          <div class="acpl-card p-4">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+              <span class="text-secondary small">Cumulative MTM</span>
+              <span class="badge-gold badge rounded-pill px-2 py-1">Live</span>
+            </div>
+            <div class="font-serif display-6 mb-3">₹ 4.2 Cr</div>
+            <svg viewBox="0 0 300 90" width="100%" height="90">
+              <polyline points="0,70 30,60 60,64 90,45 120,50 150,30 180,35 210,18 240,22 270,8 300,10"
+                        fill="none" stroke="#c9a15a" stroke-width="2.5"/>
+            </svg>
+            <hr style="border-color:var(--acpl-border)">
+            <div class="row g-3">
+              <div class="col-6">
+                <div class="text-secondary small mb-1">Funds added (MTD)</div>
+                <div class="fs-6">₹ 18.4 L</div>
+              </div>
+              <div class="col-6">
+                <div class="text-secondary small mb-1">Funds withdrawn (MTD)</div>
+                <div class="fs-6">₹ 12.1 L</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="features" class="py-5">
+    <div class="container py-5">
+      <div class="row mb-5">
+        <div class="col-lg-6">
+          <p class="section-eyebrow mb-2">Platform</p>
+          <h2 class="font-serif display-6">Built around three ledgers, not a generic spreadsheet.</h2>
+        </div>
+      </div>
+      <div class="row g-4">
+        <div class="col-md-4">
+          <div class="feature-card h-100">
+            <div class="feature-icon"><i class="bi bi-people"></i></div>
+            <h5 class="font-serif">Client registry</h5>
+            <p class="text-secondary small mb-0">Every client's login ID, contact details and account status in one searchable directory, fully editable from the admin panel.</p>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="feature-card h-100">
+            <div class="feature-icon"><i class="bi bi-cash-coin"></i></div>
+            <h5 class="font-serif">Cashflow ledger</h5>
+            <p class="text-secondary small mb-0">Funds added, funds withdrawn, and free cash balance reconciled day over day for every account.</p>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="feature-card h-100">
+            <div class="feature-icon"><i class="bi bi-graph-up"></i></div>
+            <h5 class="font-serif">Trade &amp; MTM tracking</h5>
+            <p class="text-secondary small mb-0">Investment amounts and mark-to-market movement charted against cumulative performance, per client and firm-wide.</p>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="feature-card h-100">
+            <div class="feature-icon"><i class="bi bi-shield-lock"></i></div>
+            <h5 class="font-serif">Secure admin access</h5>
+            <p class="text-secondary small mb-0">Credential-based login with hashed passwords and session-protected routes — only signed-in admins can view or edit ledger data.</p>
+          </div>
+        </div>
+        <div class="col-md-4" id="assistant">
+          <div class="feature-card h-100">
+            <div class="feature-icon"><i class="bi bi-stars"></i></div>
+            <h5 class="font-serif">GenAI assistant</h5>
+            <p class="text-secondary small mb-0">Ask questions in plain language — "who is the top performer", "total AUM" — or issue commands like "add client Priya Verma".</p>
+          </div>
+        </div>
+        <div class="col-md-4" id="ledger">
+          <div class="feature-card h-100">
+            <div class="feature-icon"><i class="bi bi-diagram-3"></i></div>
+            <h5 class="font-serif">Full CRUD control</h5>
+            <p class="text-secondary small mb-0">Create, edit and remove client, trade and cash records directly — by hand, or by asking the assistant to do it for you.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="py-5">
+    <div class="container py-4">
+      <div class="acpl-card p-5 text-center">
+        <h2 class="font-serif h3 mb-3">Sign in to see the live ledger</h2>
+        <p class="text-secondary mb-4">Access the full dashboard, client records and cashflow reports.</p>
+        <a href="{{ url_for('auth.login') }}" class="btn btn-gold btn-lg px-4">Admin Login</a>
+      </div>
+    </div>
+  </section>
+
+  <footer class="border-top py-4" style="border-color:var(--acpl-border)">
+    <div class="container d-flex flex-wrap justify-content-between text-secondary small">
+      <span>&copy; {{ 2026 }} ACPL. All rights reserved.</span>
+      <span>Financial Management System &amp; Cashflow Ledger</span>
+    </div>
+  </footer>
+</main>
+{% endblock %}

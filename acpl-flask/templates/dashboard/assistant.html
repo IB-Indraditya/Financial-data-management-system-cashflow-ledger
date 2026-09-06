@@ -1,0 +1,472 @@
+{% extends "dashboard/layout.html" %}
+
+{% block page_title %}AI Assistant{% endblock %}
+
+{% block dashboard_content %}
+
+<div class="row g-3">
+
+  <!-- Main Chat Area -->
+  <div class="col-lg-9">
+
+    <div
+      class="chat-window p-3 d-flex flex-column"
+      id="chatWindow"
+      style="
+        min-height: 450px;
+        max-height: 600px;
+        overflow-y: auto;
+      "
+    >
+
+      <!-- Initial Assistant Message -->
+      <div class="chat-bubble assistant">
+        Hi, I'm your ACPL assistant. Ask me about clients, cashflow,
+        AUM, MTM, performance, or tell me to add, rename, or delete a client.
+      </div>
+
+    </div>
+
+
+    <!-- Input -->
+    <form
+      class="d-flex gap-2 mt-3"
+      id="chatForm"
+    >
+
+      <input
+        class="form-control"
+        id="chatInput"
+        type="text"
+        placeholder="Ask a question or give a command…"
+        autocomplete="off"
+        required
+      >
+
+      <button
+        class="btn btn-gold px-4"
+        type="submit"
+        id="sendButton"
+      >
+        <i class="bi bi-send me-1"></i>
+        Send
+      </button>
+
+    </form>
+
+  </div>
+
+
+  <!-- Suggestions / Help -->
+  <div class="col-lg-3">
+
+    <div class="acpl-card p-3">
+
+      <h6 class="font-serif mb-3">
+        Try asking
+      </h6>
+
+
+      <div
+        class="d-flex flex-column gap-2"
+        id="suggestions"
+      >
+
+        <button
+          type="button"
+          class="btn btn-sm btn-outline-gold text-start suggestion"
+          data-question="How many clients do we have?"
+        >
+          How many clients do we have?
+        </button>
+
+
+        <button
+          type="button"
+          class="btn btn-sm btn-outline-gold text-start suggestion"
+          data-question="Who is the top performer?"
+        >
+          Who is the top performer?
+        </button>
+
+
+        <button
+          type="button"
+          class="btn btn-sm btn-outline-gold text-start suggestion"
+          data-question="What is the total AUM?"
+        >
+          What is the total AUM?
+        </button>
+
+
+        <button
+          type="button"
+          class="btn btn-sm btn-outline-gold text-start suggestion"
+          data-question="What is the total cash balance?"
+        >
+          Total cash balance
+        </button>
+
+
+        <button
+          type="button"
+          class="btn btn-sm btn-outline-gold text-start suggestion"
+          data-question="Show clients with negative MTM"
+        >
+          Negative MTM
+        </button>
+
+
+        <button
+          type="button"
+          class="btn btn-sm btn-outline-gold text-start suggestion"
+          data-question="List all clients"
+        >
+          List all clients
+        </button>
+
+
+        <button
+          type="button"
+          class="btn btn-sm btn-outline-gold text-start suggestion"
+          data-question="Add client Priya Verma"
+        >
+          Add client Priya Verma
+        </button>
+
+      </div>
+
+
+      <hr style="border-color:var(--acpl-border)">
+
+
+      <p class="text-secondary small mb-0">
+
+        <strong>ACPL AI Assistant</strong>
+
+        <br><br>
+
+        Ask questions about your live ACPL financial data,
+        including clients, AUM, cash, MTM and performance.
+
+        <br><br>
+
+        The assistant uses the Gemini API when
+        <code>GEMINI_API_KEY</code> is configured in your
+        environment.
+
+      </p>
+
+    </div>
+
+  </div>
+
+</div>
+
+{% endblock %}
+
+
+{% block extra_scripts %}
+
+<script>
+
+  const chatWindow =
+    document.getElementById("chatWindow");
+
+  const chatForm =
+    document.getElementById("chatForm");
+
+  const chatInput =
+    document.getElementById("chatInput");
+
+  const sendButton =
+    document.getElementById("sendButton");
+
+
+  /*
+   * Add a message bubble
+   */
+  function addBubble(text, role) {
+
+    const div =
+      document.createElement("div");
+
+    div.className =
+      "chat-bubble " + role;
+
+    div.textContent =
+      text;
+
+    chatWindow.appendChild(
+      div
+    );
+
+    chatWindow.scrollTop =
+      chatWindow.scrollHeight;
+
+    return div;
+  }
+
+
+  /*
+   * Send message to Flask API
+   */
+  async function sendMessage(text) {
+
+    text =
+      text.trim();
+
+    if (!text) {
+      return;
+    }
+
+
+    /*
+     * Add user's message
+     */
+    addBubble(
+      text,
+      "user"
+    );
+
+
+    /*
+     * Clear input
+     */
+    chatInput.value =
+      "";
+
+
+    /*
+     * Disable input while processing
+     */
+    chatInput.disabled =
+      true;
+
+    sendButton.disabled =
+      true;
+
+
+    /*
+     * Show thinking message
+     */
+    const thinking =
+      addBubble(
+        "Thinking…",
+        "assistant"
+      );
+
+
+    try {
+
+      const response =
+        await fetch(
+          "{{ url_for('api.assistant') }}",
+          {
+            method: "POST",
+
+            headers: {
+              "Content-Type":
+                "application/json"
+            },
+
+            body: JSON.stringify({
+              message: text
+            })
+          }
+        );
+
+
+      /*
+       * Try to read JSON response
+       */
+      let data;
+
+      try {
+
+        data =
+          await response.json();
+
+      } catch (jsonError) {
+
+        thinking.textContent =
+          "The server returned an invalid response. Please try again.";
+
+        return;
+      }
+
+
+      /*
+       * Support both response formats:
+       *
+       * {
+       *     "success": true,
+       *     "answer": "..."
+       * }
+       *
+       * and
+       *
+       * {
+       *     "reply": "..."
+       * }
+       */
+      const answer =
+        data.answer ||
+        data.reply;
+
+
+      /*
+       * Successful response
+       */
+      if (
+        response.ok &&
+        answer
+      ) {
+
+        thinking.textContent =
+          answer;
+
+      }
+
+
+      /*
+       * API returned an error
+       */
+      else if (data.error) {
+
+        thinking.textContent =
+          "Error: " + data.error;
+
+      }
+
+
+      /*
+       * Unknown response
+       */
+      else {
+
+        thinking.textContent =
+          "Something went wrong. Please try again.";
+
+      }
+
+
+    } catch (error) {
+
+      console.error(
+        "ACPL Assistant Error:",
+        error
+      );
+
+
+      thinking.textContent =
+        "Unable to connect to the ACPL assistant. Please check that the Flask server is running and try again.";
+
+    }
+
+
+    finally {
+
+      /*
+       * Re-enable input
+       */
+      chatInput.disabled =
+        false;
+
+      sendButton.disabled =
+        false;
+
+
+      /*
+       * Focus input
+       */
+      chatInput.focus();
+
+
+      /*
+       * Keep chat scrolled to bottom
+       */
+      chatWindow.scrollTop =
+        chatWindow.scrollHeight;
+
+    }
+
+  }
+
+
+  /*
+   * Submit form
+   */
+  chatForm.addEventListener(
+    "submit",
+    function(event) {
+
+      event.preventDefault();
+
+      sendMessage(
+        chatInput.value
+      );
+
+    }
+  );
+
+
+  /*
+   * Suggestion buttons
+   */
+  document
+    .querySelectorAll(".suggestion")
+    .forEach(
+      function(button) {
+
+        button.addEventListener(
+          "click",
+          function() {
+
+            const question =
+              button.dataset.question;
+
+            chatInput.value =
+              question;
+
+            sendMessage(
+              question
+            );
+
+          }
+        );
+
+      }
+    );
+
+
+  /*
+   * Press Enter to send
+   */
+  chatInput.addEventListener(
+    "keydown",
+    function(event) {
+
+      if (
+        event.key === "Enter" &&
+        !event.shiftKey
+      ) {
+
+        event.preventDefault();
+
+        chatForm.requestSubmit();
+
+      }
+
+    }
+  );
+
+
+  /*
+   * Automatically focus input
+   */
+  chatInput.focus();
+
+</script>
+
+{% endblock %}
